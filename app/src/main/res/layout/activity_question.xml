@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI LÀ TRIỆU PHÚ"
+        android:textStyle="bold"
+        android:textColor="@color/red"
+        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.2"
+        />
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+    >
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Content question"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:paddingVertical="30dp"
+            android:background="@drawable/blue_background"
+            />
+
+        <TextView
+            android:id="@+id/tv_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Question 1"
+            android:textColor="@color/white"
+            android:background="@drawable/yellow_bg_corner_30"
+            android:layout_centerHorizontal="true"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="25dp"
+            android:textSize="18sp"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_answer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer 1"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="19sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp"
+        android:background="@drawable/blue_bg_corner_30"
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout"
+        />
+
+    <TextView
+        android:id="@+id/tv_answer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer 2"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="19sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp"
+        android:background="@drawable/blue_bg_corner_30"
+        app:layout_constraintTop_toBottomOf="@+id/tv_answer1"
+        />
+
+    <TextView
+        android:id="@+id/tv_answer3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer 3"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="19sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp"
+        android:background="@drawable/blue_bg_corner_30"
+        app:layout_constraintTop_toBottomOf="@+id/tv_answer2"
+        />
+
+    <TextView
+        android:id="@+id/tv_answer4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Answer 4"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="19sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp"
+        android:background="@drawable/blue_bg_corner_30"
+        app:layout_constraintTop_toBottomOf="@+id/tv_answer3"
+        />
+
+    <Button
+        android:id="@+id/btn_fifty_fifty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50:50"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/orange"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_answer4"
+    />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
