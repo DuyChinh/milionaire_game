@@ -20,6 +20,21 @@
         app:layout_constraintVertical_bias="0.2"
         />
 
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/green_circle"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="30"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+    />
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="wrap_content"
@@ -27,7 +42,7 @@
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_timer"
     >
         <TextView
             android:id="@+id/tv_content"
@@ -35,11 +50,12 @@
             android:layout_height="wrap_content"
             android:text="Content question"
             android:layout_marginTop="20dp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="20sp"
             android:gravity="center"
             android:paddingVertical="30dp"
-            android:background="@drawable/blue_background"
+            android:background="@drawable/yellow_bg_corner_30"
             />
 
         <TextView
@@ -48,7 +64,7 @@
             android:layout_height="wrap_content"
             android:text="Question 1"
             android:textColor="@color/white"
-            android:background="@drawable/yellow_bg_corner_30"
+            android:background="@drawable/orange_background"
             android:layout_centerHorizontal="true"
             android:paddingVertical="10dp"
             android:paddingHorizontal="25dp"

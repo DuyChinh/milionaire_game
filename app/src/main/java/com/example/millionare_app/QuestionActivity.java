@@ -2,6 +2,7 @@ package com.example.millionare_app;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int currentQuestion = 0;
     private Question question_now;
     private Button btnFiftyFifty;
+    private TextView tvTimer;
+    private CountDownTimer countDownTimer;
+    private static final long TIME_DURATION = 31000;
 
 
     @Override
@@ -39,13 +43,25 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         setDataQuestion(questionList.get(currentQuestion));
     }
 
+    private void init() {
+        tvTimer = findViewById(R.id.tv_timer);
+        btnFiftyFifty = findViewById(R.id.btn_fifty_fifty);
+        btnFiftyFifty.setEnabled(true);
+        btnFiftyFifty.setOnClickListener(this);
+        tvQuestion = findViewById(R.id.tv_question);
+        tvContentQuestion = findViewById(R.id.tv_content);
+        answer1 = findViewById(R.id.tv_answer1);
+        answer2 = findViewById(R.id.tv_answer2);
+        answer3 = findViewById(R.id.tv_answer3);
+        answer4 = findViewById(R.id.tv_answer4);
+    }
+
 
     private void useFiftyFifty() {
         if (question_now == null || question_now.getListAnswer() == null) {
             return;
         }
 
-        // Lấy danh sách các câu trả lời
         List<Answer> answers = question_now.getListAnswer();
         List<TextView> answerViews = new ArrayList<>();
         answerViews.add(answer1);
@@ -61,8 +77,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 removedCount++;
             }
         }
-
-        // Disable nút 50:50 sau khi sử dụng
         btnFiftyFifty.setEnabled(false);
     }
 
@@ -83,23 +97,35 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answer2.setText(question.getListAnswer().get(1).getContent());
         answer3.setText(question.getListAnswer().get(2).getContent());
         answer4.setText(question.getListAnswer().get(3).getContent());
+        startTimer();
         answer1.setOnClickListener(this);
         answer2.setOnClickListener(this);
         answer3.setOnClickListener(this);
         answer4.setOnClickListener(this);
     }
 
-    private void init() {
-        btnFiftyFifty = findViewById(R.id.btn_fifty_fifty);
-        btnFiftyFifty.setEnabled(true);
-        btnFiftyFifty.setOnClickListener(this);
-        tvQuestion = findViewById(R.id.tv_question);
-        tvContentQuestion = findViewById(R.id.tv_content);
-        answer1 = findViewById(R.id.tv_answer1);
-        answer2 = findViewById(R.id.tv_answer2);
-        answer3 = findViewById(R.id.tv_answer3);
-        answer4 = findViewById(R.id.tv_answer4);
+
+    private void startTimer() {
+        if(countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        countDownTimer = new CountDownTimer(TIME_DURATION, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long secondsRemaining = millisUntilFinished / 1000;
+                tvTimer.setText(secondsRemaining + "");
+            }
+
+            @Override
+            public void onFinish() {
+                tvTimer.setText("Time's up");
+                gameOver();
+            }
+        };
+        countDownTimer.start();
     }
+
 
     private void insertSampleData() {
         QuestionDAO questionDAO = new QuestionDAO(this);
@@ -160,6 +186,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         } else if (id == R.id.tv_answer4) {
             answer4.setBackgroundResource(R.drawable.orange_background);
             checkAnswer(answer4, question_now, question_now.getListAnswer().get(3));
+        }
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
 
