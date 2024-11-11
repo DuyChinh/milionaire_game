@@ -26,6 +26,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int currentQuestion = 0;
     private Question question_now;
     private Button btnFiftyFifty;
+    private Button btnCallFriend;
     private TextView tvTimer;
     private CountDownTimer countDownTimer;
     private static final long TIME_DURATION = 31000;
@@ -46,6 +47,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
     private void init() {
         tvTimer = findViewById(R.id.tv_timer);
+        btnCallFriend = findViewById(R.id.btn_call_friend);
+        btnCallFriend.setEnabled(true);
+        btnCallFriend.setOnClickListener(this);
         btnFiftyFifty = findViewById(R.id.btn_fifty_fifty);
         btnFiftyFifty.setEnabled(true);
         btnFiftyFifty.setOnClickListener(this);
@@ -81,6 +85,19 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         btnFiftyFifty.setEnabled(false);
     }
 
+    private void useCallFriend() {
+        if(question_now == null || question_now.getListAnswer() == null) {
+            return;
+        }
+        List<Answer> answers = question_now.getListAnswer();
+        for(int i = 0; i < answers.size(); i++) {
+            if(answers.get(i).getCorrect()) {
+                showDialog2("Câu trả lời đúng là " + (i+1) +". " + answers.get(i).getContent());
+                break;
+            }
+        }
+        btnCallFriend.setEnabled(false);
+    }
 
     private void setDataQuestion(Question question) {
         if(question == null) {
@@ -126,12 +143,11 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
    }
 
 
-
     private void insertSampleData() {
         QuestionDAO questionDAO = new QuestionDAO(this);
         AnswerDAO answerDAO = new AnswerDAO(this);
 
-        long questionId1 = questionDAO.insertQuestion(new Question(1, "Ghế ngồi dành cho người chơi chương trình \"Ai là triệu phú\" được gọi là gì?", null));
+        long questionId1 = questionDAO.insertQuestion(new Question(1, "Ghế ngồi dành cho người chơi chương trình \\\"Ai là triệu phú\\\" được gọi là gì?", null));
         answerDAO.insertAnswer(new Answer("Ghế đá", false), questionId1);
         answerDAO.insertAnswer(new Answer("Ghế nóng", true), questionId1);
         answerDAO.insertAnswer(new Answer("Ghế băng", false), questionId1);
@@ -151,6 +167,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answerDAO.insertAnswer(new Answer("Anh", true), questionId3);
     }
 
+
     private List<Question> getQuestion() {
 //        insertSampleData();
         QuestionDAO questionDAO = new QuestionDAO(this);
@@ -162,7 +179,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         }
         return listQuestion;
     }
-
 
     private void checkAnswer(TextView textView, Question question, Answer answer) {
         new Handler().postDelayed(new Runnable() {
@@ -180,6 +196,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         }, 1000);
     }
 
+
     private void nextQuestion() {
         if(currentQuestion == questionList.size() - 1) {
             showDialog("You win");
@@ -187,7 +204,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    currentQuestion += 1;
+                    currentQuestion++;
                     setDataQuestion(questionList.get(currentQuestion));
                 }
             }, 1500);
@@ -200,7 +217,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         }
         if(question.getListAnswer().get(0).getCorrect()) {
             answer1.setBackgroundResource(R.drawable.bg_green_corner_30);
-
         } else if(question.getListAnswer().get(1).getCorrect()) {
             answer2.setBackgroundResource(R.drawable.bg_green_corner_30);
         } else if(question.getListAnswer().get(2).getCorrect()) {
@@ -217,23 +233,36 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 showDialog("Game over");
             }
         }, 1000);
-//        Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
-//        startActivity(intent);
     }
 
-    private void showDialog(String message) {
+   private void showDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message);
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currentQuestion = 0;
-                setDataQuestion(questionList.get(currentQuestion));
+                Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
+                startActivity(intent);
                 dialog.dismiss();
             }
         });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+   }
 
+    private void showDialog2(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+//        builder.setCancelable(false);
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
+//                startActivity(intent);
+//                dialog.dismiss();
+//            }
+//        });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -259,10 +288,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         } else if (id == R.id.tv_answer4) {
             answer4.setBackgroundResource(R.drawable.orange_background);
             checkAnswer(answer4, question_now, question_now.getListAnswer().get(3));
-        }
-
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
+        } else if(id == R.id.btn_call_friend) {
+            useCallFriend();
         }
     }
 }
