@@ -5,7 +5,6 @@ import java.util.List;
 public class Question {
     private int id;
     private String content;
-    private int score_question;
     private List<Answer> listAnswer;
 
     public Question(int id, String content, List<Answer> listAnswer) {

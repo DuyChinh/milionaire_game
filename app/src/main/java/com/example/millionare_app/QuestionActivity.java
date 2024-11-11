@@ -1,6 +1,7 @@
 package com.example.millionare_app;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -31,7 +32,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_question);
@@ -86,12 +87,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
         question_now = question;
-        String numberQuestion = "Question " + question.getId();
         answer1.setBackgroundResource(R.drawable.blue_background);
         answer2.setBackgroundResource(R.drawable.blue_background);
         answer3.setBackgroundResource(R.drawable.blue_background);
         answer4.setBackgroundResource(R.drawable.blue_background);
-        tvQuestion.setText(numberQuestion);
+        String number_question = "Question " + (currentQuestion + 1);
+        tvQuestion.setText(number_question);
         tvContentQuestion.setText(question.getContent());
         answer1.setText(question.getListAnswer().get(0).getContent());
         answer2.setText(question.getListAnswer().get(1).getContent());
@@ -104,27 +105,26 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answer4.setOnClickListener(this);
     }
 
-
-    private void startTimer() {
+   private void startTimer() {
         if(countDownTimer != null) {
             countDownTimer.cancel();
         }
-
         countDownTimer = new CountDownTimer(TIME_DURATION, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                long secondsRemaining = millisUntilFinished / 1000;
-                tvTimer.setText(secondsRemaining + "");
+                long secondRemaining = millisUntilFinished / 1000;
+                tvTimer.setText(secondRemaining + "");
             }
 
             @Override
             public void onFinish() {
-                tvTimer.setText("Time's up");
+                tvTimer.setText("End");
                 gameOver();
             }
         };
         countDownTimer.start();
-    }
+   }
+
 
 
     private void insertSampleData() {
@@ -151,47 +151,18 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answerDAO.insertAnswer(new Answer("Anh", true), questionId3);
     }
 
-
     private List<Question> getQuestion() {
-        insertSampleData();
+//        insertSampleData();
         QuestionDAO questionDAO = new QuestionDAO(this);
         AnswerDAO answerDAO = new AnswerDAO(this);
         List<Question> listQuestion = questionDAO.getAllQuestions();
-        for (Question question : listQuestion) {
+        for(Question question : listQuestion) {
             List<Answer> answers = answerDAO.getAnswersByQuestionId(question.getId());
             question.setListAnswer(answers);
         }
-
         return listQuestion;
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if(id == R.id.btn_fifty_fifty) {
-            useFiftyFifty();
-            answer1.setEnabled(true);
-            answer2.setEnabled(true);
-            answer3.setEnabled(true);
-            answer4.setEnabled(true);
-        } else if (id == R.id.tv_answer1) {
-            answer1.setBackgroundResource(R.drawable.orange_background);
-            checkAnswer(answer1, question_now, question_now.getListAnswer().get(0));
-        } else if (id == R.id.tv_answer2) {
-            answer2.setBackgroundResource(R.drawable.orange_background);
-            checkAnswer(answer2, question_now, question_now.getListAnswer().get(1));
-        } else if (id == R.id.tv_answer3) {
-            answer3.setBackgroundResource(R.drawable.orange_background);
-            checkAnswer(answer3, question_now, question_now.getListAnswer().get(2));
-        } else if (id == R.id.tv_answer4) {
-            answer4.setBackgroundResource(R.drawable.orange_background);
-            checkAnswer(answer4, question_now, question_now.getListAnswer().get(3));
-        }
-
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-    }
 
     private void checkAnswer(TextView textView, Question question, Answer answer) {
         new Handler().postDelayed(new Runnable() {
@@ -204,8 +175,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     textView.setBackgroundResource(R.drawable.bg_red_corner);
                     showAnswerCorrect(question);
                     gameOver();
-//                    Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
-//                    startActivity(intent);
                 }
             }
         }, 1000);
@@ -248,6 +217,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 showDialog("Game over");
             }
         }, 1000);
+//        Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
+//        startActivity(intent);
     }
 
     private void showDialog(String message) {
@@ -265,5 +236,33 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.btn_fifty_fifty) {
+            useFiftyFifty();
+            answer1.setEnabled(true);
+            answer2.setEnabled(true);
+            answer3.setEnabled(true);
+            answer4.setEnabled(true);
+        } else if (id == R.id.tv_answer1) {
+            answer1.setBackgroundResource(R.drawable.orange_background);
+            checkAnswer(answer1, question_now, question_now.getListAnswer().get(0));
+        } else if (id == R.id.tv_answer2) {
+            answer2.setBackgroundResource(R.drawable.orange_background);
+            checkAnswer(answer2, question_now, question_now.getListAnswer().get(1));
+        } else if (id == R.id.tv_answer3) {
+            answer3.setBackgroundResource(R.drawable.orange_background);
+            checkAnswer(answer3, question_now, question_now.getListAnswer().get(2));
+        } else if (id == R.id.tv_answer4) {
+            answer4.setBackgroundResource(R.drawable.orange_background);
+            checkAnswer(answer4, question_now, question_now.getListAnswer().get(3));
+        }
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 }
