@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="424dp"
         android:backgroundTint="@color/green"
+        android:textColor="@color/white"
         android:paddingHorizontal="30dp"
         android:paddingVertical="15dp"
         android:text="Start game"

@@ -7,6 +7,34 @@
     android:background="@drawable/bg_app"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <Button
+        android:id="@+id/btn_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/yellow_light"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/btn_exit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:drawableTop="@drawable/baseline_exit_to_app_24"
+        android:drawableTint="@color/white"
+        android:backgroundTint="@color/red"
+        android:textColor="@color/white"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
@@ -22,20 +50,6 @@
         app:layout_constraintVertical_bias="0.2"
         />
 
-    <Button
-        android:id="@+id/btn_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/yellow_bg_corner_30"
-        android:text="100$"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        />
-
     <TextView
         android:id="@+id/tv_timer"
         android:layout_width="60dp"
@@ -49,7 +63,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_amount"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title"
     />
 
 
@@ -172,6 +186,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="30dp"
             android:drawableTop="@drawable/baseline_settings_phone_24"
+            android:drawableTint="@color/white"
             android:backgroundTint="@color/yellow_light"
             android:textColor="@color/white"
             android:layout_marginLeft="15dp"

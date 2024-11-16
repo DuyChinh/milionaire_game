@@ -35,7 +35,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private Button btnCallFriend;
     private TextView tvTimer;
     private CountDownTimer countDownTimer;
-    private int amount = 100;
+    private int amount = 0;
     private Button btnAmount;
     private static final long TIME_DURATION = 31000;
 
@@ -156,21 +156,19 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void insertSampleData() {
         QuestionDAO questionDAO = new QuestionDAO(this);
         AnswerDAO answerDAO = new AnswerDAO(this);
-        // Câu hỏi 1
+
         long questionId1 = questionDAO.insertQuestion(new Question(1, "Mặt nạ giấy bồi là món đồ chơi truyền thống vào dịp nào?", 200000, null));
         answerDAO.insertAnswer(new Answer("A: Tết Nguyên Tiêu", false), questionId1);
         answerDAO.insertAnswer(new Answer("B: Tết Trung Thu", true), questionId1);
         answerDAO.insertAnswer(new Answer("C: Tết Đoan Ngọ", false), questionId1);
         answerDAO.insertAnswer(new Answer("D: Tết Nguyên Đán", false), questionId1);
 
-// Câu hỏi 2
         long questionId2 = questionDAO.insertQuestion(new Question(2, "Từ nào sau đây viết đúng chính tả Tiếng Việt?", 400000, null));
         answerDAO.insertAnswer(new Answer("A: Trầy chật", false), questionId2);
         answerDAO.insertAnswer(new Answer("B: Chầy chật", false), questionId2);
         answerDAO.insertAnswer(new Answer("C: Trầy trật", true), questionId2);
         answerDAO.insertAnswer(new Answer("D: Chầy trật", false), questionId2);
 
-// Câu hỏi 3
         long questionId3 = questionDAO.insertQuestion(new Question(3, "Câu thần chú \"Vừng ơi, mở ra!\" xuất hiện trong truyện cổ tích nào?", 600000, null));
         answerDAO.insertAnswer(new Answer("A: Cô bé bán diêm", false), questionId3);
         answerDAO.insertAnswer(new Answer("B: Nàng Bạch Tuyết và bảy chú lùn", false), questionId3);
@@ -191,14 +189,18 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         return listQuestion;
     }
 
+    private String formatAmount(int amount) {
+        return String.format("%,d", amount).replace(",", ".");
+    }
+
     private void checkAnswer(TextView textView, Question question, Answer answer) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(answer.getCorrect()) {
                     textView.setBackgroundResource(R.drawable.bg_green_corner_30);
-                    amount *= 2;
-                    btnAmount.setText(amount+ "$");
+                    amount = question.getScore();
+                    btnAmount.setText(formatAmount(amount));
                     nextQuestion();
                 } else {
                     textView.setBackgroundResource(R.drawable.bg_red_corner);
@@ -243,7 +245,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showDialog("Bạn sẽ ra về với số tiền là: " + amount + "$");
+                showDialog("Bạn sẽ ra về với số tiền là: " + formatAmount(amount) + "vnd");
             }
         }, 1000);
     }
