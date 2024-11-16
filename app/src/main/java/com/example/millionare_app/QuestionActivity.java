@@ -2,10 +2,16 @@ package com.example.millionare_app;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -29,6 +35,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private Button btnCallFriend;
     private TextView tvTimer;
     private CountDownTimer countDownTimer;
+    private int amount = 100;
+    private Button btnAmount;
     private static final long TIME_DURATION = 31000;
 
 
@@ -39,6 +47,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_question);
         init();
         questionList = getQuestion();
+        Log.d("QuestionList", "Size of questionList: " + questionList.size());
         if(questionList.isEmpty()) {
             return;
         }
@@ -47,6 +56,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
     private void init() {
         tvTimer = findViewById(R.id.tv_timer);
+        btnAmount = findViewById(R.id.btn_amount);
         btnCallFriend = findViewById(R.id.btn_call_friend);
         btnCallFriend.setEnabled(true);
         btnCallFriend.setOnClickListener(this);
@@ -92,7 +102,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         List<Answer> answers = question_now.getListAnswer();
         for(int i = 0; i < answers.size(); i++) {
             if(answers.get(i).getCorrect()) {
-                showDialog2("Câu trả lời đúng là " + (i+1) +". " + answers.get(i).getContent());
+                showCenterDialog(i + 1, "Câu trả lời đúng là " + (i+1) +". " + answers.get(i).getContent());
                 break;
             }
         }
@@ -108,7 +118,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answer2.setBackgroundResource(R.drawable.blue_background);
         answer3.setBackgroundResource(R.drawable.blue_background);
         answer4.setBackgroundResource(R.drawable.blue_background);
-        String number_question = "Question " + (currentQuestion + 1);
+        String number_question = "Question " + (currentQuestion + 1) + "/15";
         tvQuestion.setText(number_question);
         tvContentQuestion.setText(question.getContent());
         answer1.setText(question.getListAnswer().get(0).getContent());
@@ -146,25 +156,26 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void insertSampleData() {
         QuestionDAO questionDAO = new QuestionDAO(this);
         AnswerDAO answerDAO = new AnswerDAO(this);
+        // Câu hỏi 1
+        long questionId1 = questionDAO.insertQuestion(new Question(1, "Mặt nạ giấy bồi là món đồ chơi truyền thống vào dịp nào?", 200000, null));
+        answerDAO.insertAnswer(new Answer("A: Tết Nguyên Tiêu", false), questionId1);
+        answerDAO.insertAnswer(new Answer("B: Tết Trung Thu", true), questionId1);
+        answerDAO.insertAnswer(new Answer("C: Tết Đoan Ngọ", false), questionId1);
+        answerDAO.insertAnswer(new Answer("D: Tết Nguyên Đán", false), questionId1);
 
-        long questionId1 = questionDAO.insertQuestion(new Question(1, "Ghế ngồi dành cho người chơi chương trình \\\"Ai là triệu phú\\\" được gọi là gì?", null));
-        answerDAO.insertAnswer(new Answer("Ghế đá", false), questionId1);
-        answerDAO.insertAnswer(new Answer("Ghế nóng", true), questionId1);
-        answerDAO.insertAnswer(new Answer("Ghế băng", false), questionId1);
-        answerDAO.insertAnswer(new Answer("Ghế thư giãn", false), questionId1);
+// Câu hỏi 2
+        long questionId2 = questionDAO.insertQuestion(new Question(2, "Từ nào sau đây viết đúng chính tả Tiếng Việt?", 400000, null));
+        answerDAO.insertAnswer(new Answer("A: Trầy chật", false), questionId2);
+        answerDAO.insertAnswer(new Answer("B: Chầy chật", false), questionId2);
+        answerDAO.insertAnswer(new Answer("C: Trầy trật", true), questionId2);
+        answerDAO.insertAnswer(new Answer("D: Chầy trật", false), questionId2);
 
-        long questionId2 = questionDAO.insertQuestion(new Question(2, "Tháng âm lịch nào còn được gọi là \"Tháng cô hồn\"?", null));
-        answerDAO.insertAnswer(new Answer("Tháng bảy", true), questionId2);
-        answerDAO.insertAnswer(new Answer("Tháng tám", false), questionId2);
-        answerDAO.insertAnswer(new Answer("Tháng chín", false), questionId2);
-        answerDAO.insertAnswer(new Answer("Tháng mười", false), questionId2);
-
-        long questionId3 = questionDAO.insertQuestion(new Question(3, "Chương trình 'Ai là triệu phú' phát sóng trên kênh VTV3\n" +
-                "được mua bản quyền từ quốc gia nào?", null));
-        answerDAO.insertAnswer(new Answer("Mỹ", false), questionId3);
-        answerDAO.insertAnswer(new Answer("Pháp", false), questionId3);
-        answerDAO.insertAnswer(new Answer("Úc", false), questionId3);
-        answerDAO.insertAnswer(new Answer("Anh", true), questionId3);
+// Câu hỏi 3
+        long questionId3 = questionDAO.insertQuestion(new Question(3, "Câu thần chú \"Vừng ơi, mở ra!\" xuất hiện trong truyện cổ tích nào?", 600000, null));
+        answerDAO.insertAnswer(new Answer("A: Cô bé bán diêm", false), questionId3);
+        answerDAO.insertAnswer(new Answer("B: Nàng Bạch Tuyết và bảy chú lùn", false), questionId3);
+        answerDAO.insertAnswer(new Answer("C: Cô bé quàng khăn đỏ", false), questionId3);
+        answerDAO.insertAnswer(new Answer("D: Alibaba và bốn mươi tên cướp", true), questionId3);
     }
 
 
@@ -186,6 +197,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             public void run() {
                 if(answer.getCorrect()) {
                     textView.setBackgroundResource(R.drawable.bg_green_corner_30);
+                    amount *= 2;
+                    btnAmount.setText(amount+ "$");
                     nextQuestion();
                 } else {
                     textView.setBackgroundResource(R.drawable.bg_red_corner);
@@ -199,7 +212,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
 
     private void nextQuestion() {
         if(currentQuestion == questionList.size() - 1) {
-            showDialog("You win");
+            showDialog("Bạn sẽ ra về với số tiền là: " + amount + "$. Xin chúc mừng!");
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -230,7 +243,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showDialog("Game over");
+                showDialog("Bạn sẽ ra về với số tiền là: " + amount + "$");
             }
         }, 1000);
     }
@@ -251,21 +264,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         alertDialog.show();
    }
 
-    private void showDialog2(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-//        builder.setCancelable(false);
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Intent intent = new Intent(QuestionActivity.this, MainActivity.class);
-//                startActivity(intent);
-//                dialog.dismiss();
-//            }
-//        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
 
     @Override
     public void onClick(View v) {
@@ -292,4 +290,48 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             useCallFriend();
         }
     }
+
+    private void showCenterDialog(int i, String content) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.use_call_friend, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView callFriendTextView = dialogView.findViewById(R.id.call_friend);
+        callFriendTextView.setText(content);
+
+        AlertDialog dialog = dialogBuilder.create();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+        }
+    }
+
+//    private void showCenterDialog2(String content) {
+//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+//        LayoutInflater inflater = getLayoutInflater();
+//        View dialogView = inflater.inflate(R.layout.game_over, null);
+//        dialogBuilder.setView(dialogView);
+//
+//        TextView callFriendTextView = dialogView.findViewById(R.id.call_friend);
+//        callFriendTextView.setText(content);
+//
+//        AlertDialog dialog = dialogBuilder.create();
+//
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//
+//        dialog.show();
+//        Window window = dialog.getWindow();
+//        if (window != null) {
+//            window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            window.setGravity(Gravity.CENTER);
+//        }
+//    }
+
+
 }

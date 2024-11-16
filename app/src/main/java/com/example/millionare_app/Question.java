@@ -5,11 +5,13 @@ import java.util.List;
 public class Question {
     private int id;
     private String content;
+    private int score;
     private List<Answer> listAnswer;
 
-    public Question(int id, String content, List<Answer> listAnswer) {
+    public Question(int id, String content, int score, List<Answer> listAnswer) {
         this.id = id;
         this.content = content;
+        this.score = score;
         this.listAnswer = listAnswer;
     }
 
@@ -19,6 +21,10 @@ public class Question {
 
     public String getContent() {
         return content;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public List<Answer> getListAnswer() {
@@ -35,5 +41,9 @@ public class Question {
 
     public void setListAnswer(List<Answer> listAnswer) {
         this.listAnswer = listAnswer;
+    }
+
+    public int setScore(int score) {
+        return this.score = score;
     }
 }
