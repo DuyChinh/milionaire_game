@@ -93,4 +93,38 @@ public class DialogActivity {
         dialog.show();
     }
 
+
+    public void showAskExpertDialog(String message) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.ask_expert, null);
+        dialogBuilder.setView(dialogView);
+
+        TextView expert1 = dialogView.findViewById(R.id.tv_expert1);
+        TextView expert2 = dialogView.findViewById(R.id.tv_expert2);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                expert1.setText(message);
+                expert2.setText(message);
+            }
+        }, 1500);
+
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        TextView btnThank = dialogView.findViewById(R.id.btn_ask_expert);
+
+        btnThank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                questionActivity.resumeTimer();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+    }
 }

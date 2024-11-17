@@ -37,12 +37,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int currentQuestion = 0;
     private Question question_now;
     private Button btnFiftyFifty;
-    private Button btnCallFriend, btnExit, btnAskAudience;
+    private Button btnCallFriend, btnExit, btnAskAudience, btnAskExpert;
     private TextView tvTimer;
     private CountDownTimer countDownTimer;
     private int amount = 0;
     private Button btnAmount;
-    private static final long TIME_DURATION = 61000;
+    private static final long TIME_DURATION = 15000;
     private AskAudienceActivity askAudience;
     private DialogActivity dialogActivity;
     private Boolean isTimerPaused;
@@ -82,6 +82,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         btnAskAudience = findViewById(R.id.btn_ask_audience);
         btnAskAudience.setOnClickListener(this);
         btnAskAudience.setEnabled(true);
+        btnAskExpert = findViewById(R.id.btn_ask_expert);
+        btnAskExpert.setOnClickListener(this);
+        btnAskExpert.setEnabled(false);
+        btnAskExpert.setAlpha(0);
         btnCallFriend.setEnabled(true);
         btnCallFriend.setOnClickListener(this);
         btnFiftyFifty = findViewById(R.id.btn_fifty_fifty);
@@ -132,6 +136,19 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         btnCallFriend.setEnabled(false);
+    }
+
+    private void useAskExpert() {
+        if(question_now == null || question_now.getListAnswer() == null) {
+            return;
+        }
+        List<Answer> answers = question_now.getListAnswer();
+        for(Answer answer: answers) {
+            if(answer.getCorrect()) {
+                dialogActivity.showAskExpertDialog("Tôi khuyên bạn chọn: " + answer.getContent().substring(0, 1).replace(":", ""));
+                break;
+            }
+        }
     }
 
     private void setDataQuestion(Question question) {
@@ -277,6 +294,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 }
             }, 1000);
         } else {
+            if(currentQuestion == 4) {
+                btnAskExpert.setAlpha(1);
+                btnAskExpert.setEnabled(true);
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -371,6 +392,11 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         } else if(id == R.id.btn_exit) {
             gameOver();
 //            dialogActivity.showConfirm();
+        } else if(id == R.id.btn_ask_expert) {
+            useAskExpert();
+            btnAskExpert.setEnabled(false);
+            btnAskExpert.setAlpha(0.6f);
+            btnAskExpert.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cccccc")));
         }
         resumeTimer();
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="30dp"
+    android:background="@drawable/green_button_yellow_border"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hỏi chuyên gia"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="15dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/img_expert1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/expert1"
+            android:layout_marginEnd="10dp" />
+
+        <TextView
+            android:id="@+id/tv_expert1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tôi khuyên bạn chọn: ..."
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/img_expert2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/expert2"
+            android:layout_marginEnd="10dp" />
+
+        <TextView
+            android:id="@+id/tv_expert2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tôi khuyên bạn chọn: ..."
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/btn_ask_expert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pink_button_yellow_border"
+        android:paddingHorizontal="40dp"
+        android:paddingVertical="10dp"
+        android:text="CẢM ƠN"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+</LinearLayout>
