@@ -1,7 +1,10 @@
 package com.example.millionare_app;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -32,12 +36,16 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private int currentQuestion = 0;
     private Question question_now;
     private Button btnFiftyFifty;
-    private Button btnCallFriend;
+    private Button btnCallFriend, btnExit, btnAskAudience;
     private TextView tvTimer;
     private CountDownTimer countDownTimer;
     private int amount = 0;
     private Button btnAmount;
-    private static final long TIME_DURATION = 31000;
+    private static final long TIME_DURATION = 61000;
+    private AskAudienceActivity askAudience;
+    private DialogActivity dialogActivity;
+    private Boolean isTimerPaused;
+    private long remainingTime;
 
 
     @Override
@@ -46,8 +54,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_question);
         init();
+        askAudience = new AskAudienceActivity(this, this);
+        dialogActivity = new DialogActivity(this, this);
         questionList = getQuestion();
-        Log.d("QuestionList", "Size of questionList: " + questionList.size());
+//        Log.d("QuestionList", "Size of questionList: " + questionList.size());
         if(questionList.isEmpty()) {
             return;
         }
@@ -58,6 +68,11 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         tvTimer = findViewById(R.id.tv_timer);
         btnAmount = findViewById(R.id.btn_amount);
         btnCallFriend = findViewById(R.id.btn_call_friend);
+        btnExit = findViewById(R.id.btn_exit);
+        btnExit.setOnClickListener(this);
+        btnAskAudience = findViewById(R.id.btn_ask_audience);
+        btnAskAudience.setOnClickListener(this);
+        btnAskAudience.setEnabled(true);
         btnCallFriend.setEnabled(true);
         btnCallFriend.setOnClickListener(this);
         btnFiftyFifty = findViewById(R.id.btn_fifty_fifty);
@@ -102,7 +117,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         List<Answer> answers = question_now.getListAnswer();
         for(int i = 0; i < answers.size(); i++) {
             if(answers.get(i).getCorrect()) {
-                showCenterDialog(i + 1, "Câu trả lời đúng là " + (i+1) +". " + answers.get(i).getContent());
+                dialogActivity.showCallFriendDialog(answers.get(i).getContent());
                 break;
             }
         }
@@ -132,15 +147,44 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answer4.setOnClickListener(this);
     }
 
-   private void startTimer() {
+    public void pauseTimer() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            isTimerPaused = true;
+        }
+    }
+
+    public void resumeTimer() {
+        if (isTimerPaused) {
+            countDownTimer = new CountDownTimer(remainingTime, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    remainingTime = millisUntilFinished;
+                    long time = millisUntilFinished;
+                    tvTimer.setText(String.valueOf(time / 1000));
+                }
+
+                @Override
+                public void onFinish() {
+                    tvTimer.setText("End");
+                    gameOver();
+                }
+            };
+            countDownTimer.start();
+            isTimerPaused = false;
+        }
+    }
+
+    private void startTimer() {
         if(countDownTimer != null) {
             countDownTimer.cancel();
         }
         countDownTimer = new CountDownTimer(TIME_DURATION, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                long secondRemaining = millisUntilFinished / 1000;
-                tvTimer.setText(secondRemaining + "");
+                remainingTime = millisUntilFinished;
+                long time = millisUntilFinished / 1000;
+                tvTimer.setText(time + "");
             }
 
             @Override
@@ -176,7 +220,6 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         answerDAO.insertAnswer(new Answer("D: Alibaba và bốn mươi tên cướp", true), questionId3);
     }
 
-
     private List<Question> getQuestion() {
 //        insertSampleData();
         QuestionDAO questionDAO = new QuestionDAO(this);
@@ -208,11 +251,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     gameOver();
                 }
             }
-        }, 1000);
+        }, 2000);
     }
 
 
     private void nextQuestion() {
+//        Log.e("nextQuestion", "error", new Throwable());
         if(currentQuestion == questionList.size() - 1) {
             showDialog("Bạn sẽ ra về với số tiền là: " + amount + "$. Xin chúc mừng!");
         } else {
@@ -245,7 +289,10 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                showDialog("Bạn sẽ ra về với số tiền là: " + formatAmount(amount) + "vnd");
+                Intent intent = new Intent(QuestionActivity.this, GameOverActivity.class);
+                intent.putExtra("score", amount);
+                startActivity(intent);
+                finish();
             }
         }, 1000);
     }
@@ -270,8 +317,12 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        pauseTimer();
         if(id == R.id.btn_fifty_fifty) {
+//            pauseTimer();
             useFiftyFifty();
+            btnFiftyFifty.setAlpha(0.6f);
+            btnFiftyFifty.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cccccc")));
             answer1.setEnabled(true);
             answer2.setEnabled(true);
             answer3.setEnabled(true);
@@ -289,51 +340,18 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             answer4.setBackgroundResource(R.drawable.orange_background);
             checkAnswer(answer4, question_now, question_now.getListAnswer().get(3));
         } else if(id == R.id.btn_call_friend) {
+//            pauseTimer();
             useCallFriend();
+            btnCallFriend.setAlpha(0.6f);
+            btnCallFriend.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cccccc")));
+        } else if(id == R.id.btn_ask_audience) {
+//            pauseTimer();
+            askAudience.showAskAudienceDialog(question_now);
+            btnAskAudience.setEnabled(false);
+            btnAskAudience.setAlpha(0.6f);
+            btnAskAudience.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cccccc")));
+//            btnAskAudience.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.baseline_settings_phone_24, 0, 0);
         }
+        resumeTimer();
     }
-
-    private void showCenterDialog(int i, String content) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.use_call_friend, null);
-        dialogBuilder.setView(dialogView);
-
-        TextView callFriendTextView = dialogView.findViewById(R.id.call_friend);
-        callFriendTextView.setText(content);
-
-        AlertDialog dialog = dialogBuilder.create();
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        dialog.show();
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            window.setGravity(Gravity.CENTER);
-        }
-    }
-
-//    private void showCenterDialog2(String content) {
-//        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View dialogView = inflater.inflate(R.layout.game_over, null);
-//        dialogBuilder.setView(dialogView);
-//
-//        TextView callFriendTextView = dialogView.findViewById(R.id.call_friend);
-//        callFriendTextView.setText(content);
-//
-//        AlertDialog dialog = dialogBuilder.create();
-//
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//
-//        dialog.show();
-//        Window window = dialog.getWindow();
-//        if (window != null) {
-//            window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            window.setGravity(Gravity.CENTER);
-//        }
-//    }
-
-
 }

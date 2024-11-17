@@ -25,6 +25,16 @@
         <activity android:name=".QuestionActivity">
 
         </activity>
+        <activity android:name=".GameOverActivity">
+
+        </activity>
+
+        <activity android:name=".DialogActivity">
+
+        </activity>
+        <activity android:name=".AskAudienceActivity">
+
+        </activity>
     </application>
 
 </manifest>
