@@ -29,6 +29,10 @@
 
         </activity>
 
+        <activity android:name=".WinActivity">
+
+        </activity>
+
         <activity android:name=".DialogActivity">
 
         </activity>

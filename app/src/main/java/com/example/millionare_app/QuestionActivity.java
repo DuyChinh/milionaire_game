@@ -27,6 +27,7 @@ import DAO.QuestionDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class QuestionActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvQuestion;
@@ -45,7 +46,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private AskAudienceActivity askAudience;
     private DialogActivity dialogActivity;
     private Boolean isTimerPaused;
-    private long remainingTime;
+    private long remainingTime = 0;
 
 
     @Override
@@ -53,6 +54,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_question);
+        reset();
         init();
         askAudience = new AskAudienceActivity(this, this);
         dialogActivity = new DialogActivity(this, this);
@@ -62,6 +64,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
         setDataQuestion(questionList.get(currentQuestion));
+    }
+
+    private void reset() {
+        remainingTime = 0;
+        isTimerPaused = false;
+        amount = 0;
+        currentQuestion = 0;
     }
 
     private void init() {
@@ -117,7 +126,8 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         List<Answer> answers = question_now.getListAnswer();
         for(int i = 0; i < answers.size(); i++) {
             if(answers.get(i).getCorrect()) {
-                dialogActivity.showCallFriendDialog(answers.get(i).getContent());
+                String content = answers.get(i).getContent();
+                dialogActivity.showCallFriendDialog(content);
                 break;
             }
         }
@@ -167,7 +177,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                 @Override
                 public void onFinish() {
                     tvTimer.setText("End");
-                    gameOver();
+//                    gameOver();
                 }
             };
             countDownTimer.start();
@@ -250,6 +260,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
                     showAnswerCorrect(question);
                     gameOver();
                 }
+//                resumeTimer();
             }
         }, 2000);
     }
@@ -258,7 +269,13 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
     private void nextQuestion() {
 //        Log.e("nextQuestion", "error", new Throwable());
         if(currentQuestion == questionList.size() - 1) {
-            showDialog("Bạn sẽ ra về với số tiền là: " + amount + "$. Xin chúc mừng!");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(QuestionActivity.this, WinActivity.class);
+                    startActivity(intent);
+                }
+            }, 1000);
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -285,7 +302,7 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void gameOver() {
+    public void gameOver() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -351,6 +368,9 @@ public class QuestionActivity extends AppCompatActivity implements View.OnClickL
             btnAskAudience.setAlpha(0.6f);
             btnAskAudience.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#cccccc")));
 //            btnAskAudience.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.baseline_settings_phone_24, 0, 0);
+        } else if(id == R.id.btn_exit) {
+            gameOver();
+//            dialogActivity.showConfirm();
         }
         resumeTimer();
     }

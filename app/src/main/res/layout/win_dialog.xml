@@ -7,10 +7,10 @@
     android:paddingHorizontal="20dp"
     android:background="@android:color/holo_purple">
     <ImageView
-        android:id="@+id/avatar_sad"
+        android:id="@+id/avatar_win"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/sad"
+        android:src="@drawable/winner"
         android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,17 +18,17 @@
         />
 
     <TextView
-        android:id="@+id/tv_sorry"
+        android:id="@+id/tv_great"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="Rất tiếc"
+        android:text="Quá tuyệt vời"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar_sad"
+        app:layout_constraintTop_toBottomOf="@+id/avatar_win"
     />
 
     <TextView
@@ -36,13 +36,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Bạn sẽ ra về với phần thưởng"
+        android:text="Bạn đã trở thành triệu phú. Bạn sẽ ra về với phần thưởng"
+        android:gravity="center"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sorry"
+        app:layout_constraintTop_toBottomOf="@+id/tv_great"
         />
 
     <TextView
@@ -52,7 +53,7 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="5dp"
         android:layout_marginTop="8dp"
-        android:text="1,000,000"
+        android:text="150,000,000"
         android:textStyle="bold"
         android:textColor="@color/red"
         android:background="@drawable/yellow_bg_corner_30"

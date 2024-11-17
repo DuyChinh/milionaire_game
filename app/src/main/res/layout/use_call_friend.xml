@@ -39,7 +39,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/white_circle"
-        android:text="A"
+        android:text="..."
         android:textColor="@color/green"
         android:textStyle="bold"
         android:textSize="32sp"
